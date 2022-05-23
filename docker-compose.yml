@@ -1,0 +1,38 @@
+version: "3.9"
+volumes:
+  mysql_data:
+services:
+  db:
+    image: mysql:8
+    container_name: "${APP_NAME}_db"
+    environment:
+      MYSQL_DATABASE: "${APP_NAME}_${RAILS_ENV:-development}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+  app:
+    build:
+      context: .
+      args:
+        - "APP_NAME=${APP_NAME}"
+        - "WORKDIR=/${APP_NAME}"
+        - "USER=${USER:-root}"
+        - "USER_ID=${USER_ID:-0}"
+        - "GROUP=${GROUP:-root}"
+        - "GROUP_ID=${GROUP_ID:-0}"
+    user: "${USER_ID:-0}:${GROUP_ID:-0}"
+    container_name: "${APP_NAME}_app"
+    command: /bin/sh -c "rm -f tmp/pids/server.pid && rails s -b 0.0.0.0 -p 3000"
+    environment:
+      RAILS_ENV: "${RAILS_ENV:-development}"
+    volumes:
+      - ".:/${APP_NAME}"
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    depends_on:
+      - db
+
+  redis:
+     image: redis
+     command: redis-server
