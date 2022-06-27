@@ -41,7 +41,7 @@ replica_regions
 global_table_enabled  
 replica_enabled  
 
-### テーブル作成
+### 削除
 
 テーブル`sample2`を削除
 
@@ -49,14 +49,14 @@ replica_enabled
 Sample::Dynamodb::Migrate::Sample2.drop
 ```
 
-### テーブル存在確認
+### 存在確認
 
 ```rb
 Sample::Dynamodb::Migrate::Sample2.exists?
 ```
 
 
-### データ登録
+### 登録
 
 ```rb
 Sample::Dynamodb::Models::Sample2.put({ user_id: "1", foo: "FOO" }, 'sample2', 'ap-northeast-1')
@@ -65,7 +65,7 @@ Sample::Dynamodb::Models::Sample2.put({ user_id: "1", foo: "FOO" }, 'sample2', '
 テーブル名は省略可(モデル名から推測できる場合)  
 リージョンは省略可(Sample::Dynamodb::Client#default_regionになる)  
 
-### データ取得
+### 取得
 
 ```rb
 Sample::Dynamodb::Models::Sample2.get(user_id: "1", 'sample2', 'ap-northeast-1')
