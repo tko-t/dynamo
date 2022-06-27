@@ -34,20 +34,18 @@ RUN apk update && \
 
 WORKDIR $WORKDIR
 
-# railsだけ。rails new で上書き
-ADD ./Gemfile $WORKDIR/Gemfile
-ADD ./Gemfile.lock $WORKDIR/Gemfile.lock
-
 # ローカル環境のIDと合わせたらいいと思う
 RUN addgroup -S -g $GROUP_ID $GROUP && \
     adduser -u $USER_ID -G $USER -D $USER
 
-RUN chown $USER:$GROUP $WORKDIR/*
+RUN chown $USER:$GROUP $WORKDIR
 
 USER $USER
 
+COPY ./Gemfile* $WORKDIR/
+
 RUN bundle install
 
-ADD ./ $WORKDIR
+COPY ./ $WORKDIR
 
 # docker-composeで使うことしか考えてないからCMDなし

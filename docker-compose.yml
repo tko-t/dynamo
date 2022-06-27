@@ -33,6 +33,15 @@ services:
     depends_on:
       - db
 
+  localstack:
+    image: localstack/localstack
+    container_name: "${APP_NAME}_localstack"
+    ports:
+      - "14566:4566"
+        #- "14510-14559:4510-4559"
+    environment:
+      SERVICES: dynamodb
+
   redis:
      image: redis
      command: redis-server
